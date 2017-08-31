@@ -1,43 +1,69 @@
 
 class Board
 
-	@@range = 0..2
+  @@num_of_positions = 9
+  @@range = 0..2
 
-	def initialize
-		
-		@matrix = Array.new(3) { Array.new(3) }
-	end
+  def initialize
+    
+    @matrix = Array.new(3) { Array.new(3) }
+    @available_positions = []
 
-	def c(x, y)
-		
-		@matrix[x][y].nil? ? " " : @matrix[x][y]
-	end
+    @matrix.each_index do |i|
+      @matrix.each_index do |j|
 
-	def mark(simb, x, y)
+        @available_positions.push [i, j]
 
-		raise "Posição já preenchida. [#{x}, #{y}]" unless @matrix[x][y].nil?
+      end
+    end
+  end
 
-		if !@@range.include?(x) || !@@range.include?(y)
+  def empty?
+    @available_positions.length == @@num_of_positions
+  end
 
-			raise "Posição fora dos limites. [#{x}, #{y}]" 
-		end
+  def full?
+    @available_positions.empty?
+  end
 
-		@matrix[x][y] = simb
+  def available_positions
+    @available_positions
+  end
 
-	end
+  def available_position?(position)
+    @available_positions.include? position
+  end
 
-	def inspect
-		"\n     0     1     2    X" + 
-		"\n" + 
-		"\n0    #{c(0, 0)}  |  #{c(1, 0)}  |  #{c(2, 0)}  " +
-		"\n   _____|_____|_____" +
-		"\n        |     |" +
-		"\n1    #{c(0, 1)}  |  #{c(1, 1)}  |  #{c(2, 1)}" +
-		"\n   _____|_____|_____" +
-		"\n        |     |" +
-		"\n2    #{c(0, 2)}  |  #{c(1, 2)}  |  #{c(2, 2)}" +
-		"\n\nY\n"
-	end
+  def mark(simb, position)
+    x, y = position
 
-	private :c
+    raise "Position already marked. [#{position}]" unless @matrix[x][y].nil?
+
+    if !@@range.include?(x) || !@@range.include?(y)
+      raise "Posição fora dos limites. [#{x}, #{y}]" 
+    end
+
+    @matrix[x][y] = simb
+    @available_positions.delete(position)
+  end
+
+  def p_pos(x, y)
+
+    @matrix[x][y].nil? ? " " : @matrix[x][y]
+  end
+
+  def inspect
+    "\n     0     1     2    X" + 
+    "\n" + 
+    "\n0    #{p_pos(0, 0)}  |  #{p_pos(1, 0)}  |  #{p_pos(2, 0)}  " +
+    "\n   _____|_____|_____" +
+    "\n        |     |" +
+    "\n1    #{p_pos(0, 1)}  |  #{p_pos(1, 1)}  |  #{p_pos(2, 1)}" +
+    "\n   _____|_____|_____" +
+    "\n        |     |" +
+    "\n2    #{p_pos(0, 2)}  |  #{p_pos(1, 2)}  |  #{p_pos(2, 2)}" +
+    "\n\nY\n"
+  end
+
+  private :p_pos
 end
