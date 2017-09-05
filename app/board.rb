@@ -34,6 +34,7 @@ class Board
     @available_positions.include? position
   end
 
+
   def mark(simb, position)
     x, y = position
 
@@ -46,6 +47,54 @@ class Board
     @matrix[x][y] = simb
     @available_positions.delete(position)
   end
+
+
+  def completed_direction
+
+    dir = verify_direction(:row) { |row, i| @matrix[i][row] }
+    return dir unless dir.nil?
+
+    dir = verify_direction(:col) { |col, i| @matrix[col][i] }
+    return dir unless dir.nil?
+
+    dir = verify_direction_elements(:diag, 0) { |col, i| @matrix[i][i] }
+    return dir unless dir.nil?
+
+    dir = verify_direction_elements(:diag, 1) { |col, i| @matrix[2-i][i] }
+    return dir unless dir.nil?
+
+    nil
+  end
+
+
+  def verify_direction(dir)
+    
+    @matrix.each_index do |dir_index|
+
+      completed = verify_direction_elements(dir, dir_index) do |i, j|
+        yield(i, j)
+      end
+
+      return completed unless completed.nil?
+    end
+
+    nil
+  end
+
+  def verify_direction_elements(dir, dir_index)
+
+    symbol = yield(dir_index, 0)
+
+    @matrix.each_index do |elem_index|
+
+      val = yield(dir_index, elem_index)
+
+      return nil if (val.nil? || symbol.nil? || symbol != val)
+    end
+
+    { dir => dir_index, :symbol => symbol }
+  end
+
 
   def p_pos(x, y)
 
