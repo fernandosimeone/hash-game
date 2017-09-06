@@ -102,7 +102,7 @@ class Board
   end
 
   def inspect
-    "\n     0     1     2    X" + 
+    "\n     0     1     2" + 
     "\n" + 
     "\n0    #{p_pos(0, 0)}  |  #{p_pos(1, 0)}  |  #{p_pos(2, 0)}  " +
     "\n   _____|_____|_____" +
@@ -111,7 +111,7 @@ class Board
     "\n   _____|_____|_____" +
     "\n        |     |" +
     "\n2    #{p_pos(0, 2)}  |  #{p_pos(1, 2)}  |  #{p_pos(2, 2)}" +
-    "\n\nY\n"
+    "\n"
   end
 
   private :p_pos
